@@ -3,7 +3,6 @@ import mealster.libraries
 plugins{
     id("anas.kotlin-common")
     id("io.spring.dependency-management")
-    kotlin("plugin.jpa")
 }
 
 dependencies {

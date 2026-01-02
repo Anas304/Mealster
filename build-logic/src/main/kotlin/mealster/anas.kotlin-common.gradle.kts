@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-plugins{
+plugins {
     kotlin("jvm")
     kotlin("plugin.spring")
     id("io.spring.dependency-management")
@@ -11,8 +11,9 @@ plugins{
 repositories {
     mavenCentral()
 }
-dependencyMangament{
-    imports{
+
+dependencyManagement {
+    imports {
         mavenBom("org.springframework.boot:spring-boot-dependencies:${libraries.findVersion("spring-boot").get()}")
     }
 }
