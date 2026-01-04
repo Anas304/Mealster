@@ -23,7 +23,9 @@ spring:
         tcpKeepAlive: true
         socketTimeout: 30
         connectTimeout: 10
-    #shared JPA properties that can be used across different profiles (dev / prod) and profile-based schemas
+      #shared JPA properties that can be used across different profiles (dev / prod) and profile-based schemas
+      #The PostgreSQLDialect tells Hibernate: "I know you're writing standard HQL (Hibernate Query Language),
+      #but when you talk to the database, make sure you use the specific syntax that PostgreSQL understands."
     jpa:
       properties:
         hibernate:
