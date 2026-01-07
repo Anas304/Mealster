@@ -1,7 +1,10 @@
 package com.anas.mealster.api.controllers
 
+import com.anas.mealster.api.dto.AuthenticatedUserDto
+import com.anas.mealster.api.dto.LoginRequest
 import com.anas.mealster.api.dto.RegisterRequest
 import com.anas.mealster.api.dto.UserDto
+import com.anas.mealster.api.mappers.toAuthenticatedUserDto
 import com.anas.mealster.api.mappers.toUserDto
 import com.anas.mealster.service.auth_service.AuthService
 import jakarta.validation.Valid
@@ -24,5 +27,15 @@ class AuthController(
             username = body.username,
             password = body.password,
         ).toUserDto()
+    }
+
+    @RequestMapping("/login")
+    fun login(
+        @RequestBody body : LoginRequest
+    ) : AuthenticatedUserDto{
+        return authService.login(
+            email = body.email,
+            password = body.password
+        ).toAuthenticatedUserDto()
     }
 }
