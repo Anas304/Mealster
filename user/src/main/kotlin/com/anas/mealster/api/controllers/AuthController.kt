@@ -2,6 +2,7 @@ package com.anas.mealster.api.controllers
 
 import com.anas.mealster.api.dto.AuthenticatedUserDto
 import com.anas.mealster.api.dto.LoginRequest
+import com.anas.mealster.api.dto.RefreshRequest
 import com.anas.mealster.api.dto.RegisterRequest
 import com.anas.mealster.api.dto.UserDto
 import com.anas.mealster.api.mappers.toAuthenticatedUserDto
@@ -37,5 +38,19 @@ class AuthController(
             email = body.email,
             password = body.password
         ).toAuthenticatedUserDto()
+    }
+
+    @RequestMapping("/refresh")
+    fun refresh(
+        @RequestBody body : RefreshRequest
+    ) : AuthenticatedUserDto{
+        return authService.refresh(refreshToken = body.refreshToken).toAuthenticatedUserDto()
+    }
+
+    @RequestMapping("/logout")
+    fun logout(
+        @RequestBody body : RefreshRequest
+    ) {
+       authService.logout(refreshToken = body.refreshToken)
     }
 }
