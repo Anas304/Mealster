@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
@@ -21,8 +22,11 @@ class EmailVerificationTokenEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id : Long = 0,
     @Column(nullable = false)
-    var hashedToken: String,
+    var token: String,
+    // FetchType.LAZY means Hibernate will not fetch the User data from the database until 'user' is explicitly accessed in the code.
+    // This prevents unnecessary JOINs or extra SELECT queries if we only need the token details
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     var user : UserEntity,
     @Column
     var usedAt: Instant,
