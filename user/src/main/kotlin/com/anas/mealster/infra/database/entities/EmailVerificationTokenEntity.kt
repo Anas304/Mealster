@@ -1,5 +1,6 @@
 package com.anas.mealster.infra.database.entities
 
+import com.anas.mealster.infra.security.TokenGenerator
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -22,7 +23,7 @@ class EmailVerificationTokenEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id : Long = 0,
     @Column(nullable = false)
-    var token: String,
+    var token: String = TokenGenerator.generateSecureToken(),
     // FetchType.LAZY means Hibernate will not fetch the User data from the database until 'user' is explicitly accessed in the code.
     // This prevents unnecessary JOINs or extra SELECT queries if we only need the token details
     @ManyToOne(fetch = FetchType.LAZY)
