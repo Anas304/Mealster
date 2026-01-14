@@ -1,5 +1,6 @@
 package com.anas.mealster.service.auth_service
 
+import com.anas.mealster.domain.exception.EmailNotVerifiedException
 import com.anas.mealster.domain.exception.InvalidCredentialException
 import com.anas.mealster.domain.exception.InvalidTokenException
 import com.anas.mealster.domain.exception.UserAlreadyExistException
@@ -25,12 +26,15 @@ class AuthService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtService: JWTService,
-    private val refreshTokenRepository: RefreshTokenRepository
+    private val refreshTokenRepository: RefreshTokenRepository,
+    private val emailVerificationService: EmailVerificationService
 ) {
 
+    @Transactional
     fun register(email: String, username: String, password: String): User {
+        val trimmedEmail = email.trim()
         val user = userRepository.findByEmailOrUsername(
-            email = email.trim(),
+            email = trimmedEmail,
             username = username.trim()
         )
         if (user != null) {
@@ -38,11 +42,12 @@ class AuthService(
         }
         val savedUser = userRepository.save(
             UserEntity(
-                email = email,
-                username = username,
+                email = trimmedEmail,
+                username = username.trim(),
                 hashedPassword = passwordEncoder.encode(password) ?: ""
             )
         ).toUser()
+        val token = emailVerificationService.createEmailVerificationToken(trimmedEmail)
         return savedUser
     }
 
@@ -99,7 +104,11 @@ class AuthService(
         if (!passwordEncoder.matches(password, user.hashedPassword)) {
             throw InvalidCredentialException()
         }
-        //TODO check if user email is verified before login
+        //TODO check for email
+        if (!user.hasVerifiedEmail){
+            throw EmailNotVerifiedException()
+        }
+
         return user.id?.let { userId ->
             val accessToken = jwtService.generateAccessToken(userId)
             val refreshToken = jwtService.generateRefreshToken(userId)

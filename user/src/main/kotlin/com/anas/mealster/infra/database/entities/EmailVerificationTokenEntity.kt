@@ -22,15 +22,24 @@ class EmailVerificationTokenEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id : Long = 0,
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     var token: String = TokenGenerator.generateSecureToken(),
+    @Column(nullable = false)
+    var expiresAt: Instant,
     // FetchType.LAZY means Hibernate will not fetch the User data from the database until 'user' is explicitly accessed in the code.
     // This prevents unnecessary JOINs or extra SELECT queries if we only need the token details
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     var user : UserEntity,
     @Column
-    var usedAt: Instant,
+    var usedAt: Instant? = null,
     @CreationTimestamp
     var createdAt : Instant = Instant.now()
-)
+){
+    // these are extension properties for this data class
+    val isUsed : Boolean
+        get() = usedAt != null
+
+    val isExpired : Boolean
+        get() = Instant.now() > expiresAt
+}

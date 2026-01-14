@@ -26,15 +26,15 @@ class UserEntity(
     @GeneratedValue(strategy = GenerationType.UUID)
     val id : UserId? = null,
     @Column(nullable = false, unique = true)
-    val email: String,
+    var email: String,
     @Column(nullable = false, unique = true)
-    val username: String,
+    var username: String,
     @Column(nullable = false)
-    val hashedPassword: String,
+    var hashedPassword: String,
     @Column(nullable = false)
-    val hasVerifiedEmail: Boolean = false,
+    var hasVerifiedEmail: Boolean = false,
     @CreationTimestamp
-    val createdAt : Instant = Instant.now(),
+    var createdAt : Instant = Instant.now(),
     @UpdateTimestamp
-    val updatedAt : Instant = Instant.now()
+    var updatedAt : Instant = Instant.now()
 )

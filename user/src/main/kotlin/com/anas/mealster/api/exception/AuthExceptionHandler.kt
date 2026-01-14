@@ -1,5 +1,6 @@
 package com.anas.mealster.api.exception
 
+import com.anas.mealster.domain.exception.EmailNotVerifiedException
 import com.anas.mealster.domain.exception.InvalidCredentialException
 import com.anas.mealster.domain.exception.InvalidTokenException
 import com.anas.mealster.domain.exception.UserAlreadyExistException
@@ -27,6 +28,15 @@ class AuthExceptionHandler {
         e: InvalidCredentialException
     ) = mapOf(
         "code" to "INVALID_CREDENTIALS",
+        "message" to e.message
+    )
+
+    @ExceptionHandler(EmailNotVerifiedException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    fun onEmailNotVerified(
+        e: EmailNotVerifiedException
+    ) = mapOf(
+        "code" to "EMAIL_NOT_VERIFIED",
         "message" to e.message
     )
 

@@ -7,8 +7,8 @@ import java.time.Instant
 
 interface EmailVerificationTokenRepository : JpaRepository<EmailVerificationTokenEntity, Long> {
 
-    fun findByToken(token: String) : EmailVerificationTokenRepository?
+    fun findByToken(token: String) : EmailVerificationTokenEntity?
     fun deleteByExpiresAtLessThan(now: Instant)
-    fun findByUserAndUserAtIsNull(user: UserEntity) : List<EmailVerificationTokenRepository>
+    fun findByUserAndUsedAtIsNull(user: UserEntity) : List<EmailVerificationTokenEntity>
 
 }
