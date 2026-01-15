@@ -1,0 +1,31 @@
+package com.anas.mealster.infra.database.entities
+
+import com.anas.mealster.infra.security.TokenGenerator
+import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
+import java.time.Instant
+
+@Entity
+@Table(
+    name = "password-reset-tokens",
+    schema = "user_service",
+    indexes = [
+        Index(name = "idx_password_reset_token_token", columnList = "token")
+    ]
+)
+class PasswordResetTokenEntity(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id : Long = 0,
+    @Column(nullable = false, unique = true)
+    var token : String = TokenGenerator.generateSecureToken(),
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    var user : UserEntity,
+    @Column(nullable = false)
+    var usedAt : Instant,
+    @Column(nullable = false)
+    var expiresAt:  Instant,
+    @CreationTimestamp
+    var createdAt: Instant = Instant.now()
+)
