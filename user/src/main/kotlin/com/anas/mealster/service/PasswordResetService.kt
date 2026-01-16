@@ -80,7 +80,7 @@ class PasswordResetService(
         newPassword: String
     ) {
         val user = userRepository.findByIdOrNull(userId) ?: throw UserNotFoundException()
-        if (!passwordEncoder.matches(newPassword,user.hashedPassword)){
+        if (!passwordEncoder.matches(oldPassword,user.hashedPassword)){
             throw InvalidCredentialException()
         }
         if (oldPassword == newPassword){
