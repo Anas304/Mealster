@@ -7,8 +7,8 @@ import com.anas.mealster.api.dto.RegisterRequest
 import com.anas.mealster.api.dto.UserDto
 import com.anas.mealster.api.mappers.toAuthenticatedUserDto
 import com.anas.mealster.api.mappers.toUserDto
-import com.anas.mealster.service.auth_service.AuthService
-import com.anas.mealster.service.auth_service.EmailVerificationService
+import com.anas.mealster.service.AuthService
+import com.anas.mealster.service.EmailVerificationService
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping

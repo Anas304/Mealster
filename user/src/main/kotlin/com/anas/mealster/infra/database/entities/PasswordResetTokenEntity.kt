@@ -22,10 +22,17 @@ class PasswordResetTokenEntity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     var user : UserEntity,
-    @Column(nullable = false)
-    var usedAt : Instant,
+    @Column(nullable = true)
+    var usedAt : Instant? = null,
     @Column(nullable = false)
     var expiresAt:  Instant,
     @CreationTimestamp
     var createdAt: Instant = Instant.now()
-)
+){
+    // these are extension properties for this data class
+    val isUsed : Boolean
+        get() = usedAt != null
+
+    val isExpired : Boolean
+        get() = Instant.now() > expiresAt
+}

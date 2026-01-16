@@ -1,4 +1,4 @@
-package com.anas.mealster.service.auth_service
+package com.anas.mealster.service
 
 import com.anas.mealster.domain.exception.InvalidTokenException
 import com.anas.mealster.domain.model.UserId
