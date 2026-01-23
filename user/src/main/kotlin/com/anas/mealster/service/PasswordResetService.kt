@@ -71,7 +71,7 @@ class PasswordResetService(
             }
         )
         // invalidating refresh tokens in our DB as password is now reset
-        refreshTokenRepository.deleteById(user.id!!)
+        refreshTokenRepository.deleteByUserId(user.id!!)
     }
 
     fun changePassword(
@@ -86,7 +86,7 @@ class PasswordResetService(
         if (oldPassword == newPassword){
             throw SamePasswordException()
         }
-        refreshTokenRepository.deleteById(user.id!!)
+        refreshTokenRepository.deleteByUserId(user.id!!)
         val newHashedPassword = passwordEncoder.encode(newPassword)
 
         userRepository.save(
