@@ -2,7 +2,7 @@ import mealster.libraries
 
 plugins{
     id("anas.kotlin-common")
-    //id("org.springframework.boot) adding this here spring boot will recognize a module that should have a main function the moment we add this plugin.
+    //id("org.springframework.boot) adding this here spring boot will recognize a module that should have a main function (entry-point) the moment we add this plugin.
     id("io.spring.dependency-management")
 }
 

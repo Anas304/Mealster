@@ -25,7 +25,7 @@ import java.util.Base64
 class AuthService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val jwtService: JWTService,
+   // private val jwtService: JWTService,
     private val refreshTokenRepository: RefreshTokenRepository,
     private val emailVerificationService: EmailVerificationService
 ) {
@@ -44,7 +44,7 @@ class AuthService(
             UserEntity(
                 email = trimmedEmail,
                 username = username.trim(),
-                hashedPassword = passwordEncoder.encode(password) ?: ""
+                hashedPassword = passwordEncoder.encode(password)
             )
         ).toUser()
         val token = emailVerificationService.createEmailVerificationToken(trimmedEmail)
