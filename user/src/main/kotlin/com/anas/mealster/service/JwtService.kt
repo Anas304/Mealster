@@ -1,5 +1,6 @@
 package com.anas.mealster.service
 
+import com.anas.mealster.domain.exception.InvalidTokenException
 import com.anas.mealster.domain.model.UserId
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
@@ -18,11 +19,19 @@ class JwtService(
     private val accessTokenValidityMs = expiryMinutes * 60 * 1000L
     private val refreshTokenValidityMs = 30 * 24 * 60 * 60 * 1000L
 
-    fun generateAccessToken(userId: UserId) : String{
-        return generateToken(userId,"access",accessTokenValidityMs)
+    fun validateAccessToken(token: String): Boolean {
+        val claims = parseAllClaims(token) ?: return false
+        val tokenType = claims["type"] as? String ?: return false
+        return tokenType == "access"
     }
-    fun generateRefreshToken(userId: UserId) : String{
-        return generateToken(userId,"refresh",refreshTokenValidityMs)
+
+
+    fun generateAccessToken(userId: UserId): String {
+        return generateToken(userId, "access", accessTokenValidityMs)
+    }
+
+    fun generateRefreshToken(userId: UserId): String {
+        return generateToken(userId, "refresh", refreshTokenValidityMs)
     }
 
     fun generateToken(
@@ -42,18 +51,21 @@ class JwtService(
             .compact()
     }
 
-    fun parseAllClaims(token: String) : Claims? {
+    fun parseAllClaims(token: String): Claims? {
+        val rawToken = if (token.startsWith("Bearer ")) {
+            token.removePrefix("Bearer  ")
+        } else token
+
         return try {
             Jwts.parser()
                 .verifyWith(secreteKey)
                 .build()
-                .parseSignedClaims(token)
+                .parseSignedClaims(rawToken)
                 .payload
-        } catch (_ : Exception){
+        } catch (_: Exception) {
             null
         }
     }
-
 
 
 }
