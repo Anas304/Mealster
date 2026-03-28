@@ -4,5 +4,5 @@ spring:
       ddl-auto: update
 
 jwt:
-  secrete: ${JWT_SECRET_KEY}
-  expiry-minutes: 1000
+  expiry:
+    minutes: 1000

@@ -6,18 +6,20 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
-import java.util.Date
+import org.springframework.stereotype.Service
+import java.util.*
 import kotlin.io.encoding.Base64
 
+@Service
 class JwtService(
-    @param: Value("\${jwt.secret}") private val secreteBase64: String,
+    @param: Value("\${jwt.secret}") private val secretBase64: String,
     @param: Value("\${jwt.expiry.minutes}") private val expiryMinutes: Int
 ) {
 
-    private val secreteKey = Keys.hmacShaKeyFor(Base64.decode(secreteBase64))
+    private val secretKey = Keys.hmacShaKeyFor(Base64.decode(secretBase64))
 
     private val accessTokenValidityMs = expiryMinutes * 60 * 1000L
-    private val refreshTokenValidityMs = 30 * 24 * 60 * 60 * 1000L
+    val refreshTokenValidityMs = 30 * 24 * 60 * 60 * 1000L
 
     fun validateAccessToken(token: String): Boolean {
         val claims = parseAllClaims(token) ?: return false
@@ -25,6 +27,18 @@ class JwtService(
         return tokenType == "access"
     }
 
+    fun validateRefreshToken(token: String): Boolean {
+        val claims = parseAllClaims(token) ?: return false
+        val tokenType = claims["type"] as? String ?: return false
+        return tokenType == "refresh"
+    }
+
+    fun getUserIdFromToken(token: String) : UserId{
+        val claims = parseAllClaims(token) ?: throw InvalidTokenException(
+            "This token is invalid"
+        )
+        return UUID.fromString(claims.subject)
+    }
 
     fun generateAccessToken(userId: UserId): String {
         return generateToken(userId, "access", accessTokenValidityMs)
@@ -47,7 +61,7 @@ class JwtService(
             .claim("type", type)
             .issuedAt(now)
             .expiration(expiryDate)
-            .signWith(secreteKey, Jwts.SIG.HS256)
+            .signWith(secretKey, Jwts.SIG.HS256)
             .compact()
     }
 
@@ -58,7 +72,7 @@ class JwtService(
 
         return try {
             Jwts.parser()
-                .verifyWith(secreteKey)
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(rawToken)
                 .payload
@@ -66,6 +80,4 @@ class JwtService(
             null
         }
     }
-
-
 }

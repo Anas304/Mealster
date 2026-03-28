@@ -2,42 +2,42 @@ spring:
   application:
     name: Mealster
 
-    datasource:
-      url: jdbc:postgresql  #PostgreSQL JDBC driver supports server-side prepared statements, and jdbc here is the Java thread blocking JDBC API
-      username: postgres.xxxxxxxxx
-      password: ${}
-      driver-class-name: org.postgresql.Driver
+  datasource:
+    url: jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres
+    username: postgres.pwowztkuqojdingvkknx
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
 
-    Hikari:
+    hikari:
       maximum-pool-size: 10
       minimum-idle: 5
       connection-timeout: 20000
       idle-timeout: 3000000
       max-lifetime: 12000000
       pool-name: SpringBootHikariCP
-      data-source-properties: #means the properties of data-source we need for our DB handling, in our case Postgresql
-        prepareThreshold: 5 #means: After executing the same SQL 5 times, the driver will create a server-side prepared statement and reuse it
-        preparedStatementCachedQueries: 256 # actual number of queries as prepared statements
-        preparedStatementCachesSizeMiB: 5
-        # properties of Postgresql connection
+      data-source-properties:
+        prepareThreshold: 5
+        preparedStatementCacheQueries: 256
+        preparedStatementCacheSizeMiB: 5
         tcpKeepAlive: true
         socketTimeout: 30
         connectTimeout: 10
-      #shared JPA properties that can be used across different profiles (dev / prod) and profile-based schemas
-      #The PostgreSQLDialect tells Hibernate: "I know you're writing standard HQL (Hibernate Query Language),
-      #but when you talk to the database, make sure you use the specific syntax that PostgreSQL understands."
-    jpa:
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.PostgreSQLDialect
-          format_sql: true
-          show_sql: true
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
 jwt:
   secret: ${JWT_SECRET_KEY}
+  expiry:
+    minutes: 15
 
 mealster:
   email:
     verification:
       expiry-hours: 24
-    reset-password:
+    password-reset:
       expiry-minutes: 30

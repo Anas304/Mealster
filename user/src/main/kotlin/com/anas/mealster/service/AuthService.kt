@@ -25,7 +25,7 @@ import java.util.Base64
 class AuthService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-   // private val jwtService: JWTService,
+    private val jwtService: JwtService,
     private val refreshTokenRepository: RefreshTokenRepository,
     private val emailVerificationService: EmailVerificationService
 ) {

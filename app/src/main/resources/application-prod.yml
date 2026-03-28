@@ -2,6 +2,3 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-jwt:
-  secrete: ${JWT_SECRET_KEY}
-  expiry-minutes: 15

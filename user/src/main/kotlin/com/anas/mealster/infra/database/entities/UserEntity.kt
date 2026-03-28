@@ -15,7 +15,7 @@ import java.time.Instant
 @Entity
 @Table(
     name = "users",
-    schema = "users_service",
+    schema = "user_service",
     indexes = [
         Index(name = "email_idx", columnList = "email", unique = true),
         Index(name = "username_idx", columnList = "username", unique = true)
